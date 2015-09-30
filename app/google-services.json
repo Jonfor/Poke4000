@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_id": "poke4000-4c263",
+    "project_number": "39539505899",
+    "name": "Poke4000"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:39539505899:android:6499f2c68fa71cb3",
+        "client_id": "android:net.jonfor.poke4000",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "net.jonfor.poke4000"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 2,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 1
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}
