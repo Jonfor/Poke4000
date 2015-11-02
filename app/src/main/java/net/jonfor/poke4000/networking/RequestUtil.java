@@ -10,6 +10,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 
+import net.jonfor.poke4000.helpers.PrefHelper;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -55,15 +57,17 @@ public class RequestUtil {
         mInstance.addToRequestQueue(request);
     }
 
-    public static void sendServerInfo(String ip, int port, int frequency, final Context context) {
+    public static void sendServerInfo(String ip, String port, int frequency, final Context context) {
         String url = host + "/data";
 
+        String token = PrefHelper.getRegistrationToken(context);
 
         JSONObject data = new JSONObject();
         try {
             data.put("ip", ip);
             data.put("port", port);
             data.put("frequency", frequency);
+            data.put("token", token);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -71,7 +75,7 @@ public class RequestUtil {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-
+                        Log.i("data response", response.toString());
                     }
                 },
                 new Response.ErrorListener() {
@@ -83,12 +87,18 @@ public class RequestUtil {
                                             "to database",
                                     Toast.LENGTH_LONG).show();
                             error.printStackTrace();
+                            if (!error.getMessage().equals("")) {
+                                Log.e("Error", error.getMessage());
+                            }
                         } else {
                             Log.e("sendServerInfo", error.toString());
                             Toast.makeText(context, "An error has occurred while pushing server info " +
                                             "to database",
                                     Toast.LENGTH_LONG).show();
                             error.printStackTrace();
+                            if (!error.getMessage().equals("")) {
+                                Log.e("Error", error.getMessage());
+                            }
                         }
                     }
                 });

@@ -6,6 +6,9 @@
     <string name="create_poke">Poke!</string>
     <string name="add_to_list">Add to list!</string>
 
+    <string name="server">Server name or IP address</string>
+    <string name="port">Port number (Optional)</string>
+    <string name="frequency">Frequency (Minutes)</string>
     <string name="gcm_send_message">Token retrieved and sent to server! You can now use gcmsender to
         send downstream messages to this app.</string>
     <string name="registering_message">Generating InstanceID token&#8230;</string>

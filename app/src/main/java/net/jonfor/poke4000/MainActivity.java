@@ -10,8 +10,11 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -19,6 +22,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import net.jonfor.poke4000.helpers.PrefHelper;
 import net.jonfor.poke4000.helpers.QuickstartPreferences;
 import net.jonfor.poke4000.helpers.RegistrationIntentService;
+import net.jonfor.poke4000.networking.RequestUtil;
 
 
 public class MainActivity extends Activity {
@@ -28,29 +32,31 @@ public class MainActivity extends Activity {
     private BroadcastReceiver mRegistrationBroadcastReceiver;
 
     private ProgressBar mRegistrationProgressBar;
-    private TextView mInformationTextView;
-//    private EditText pokeAddressEditText;
-//    private Button pokeButton, addToListButton;
+    private EditText pokeAddressEditText;
+    private EditText frequencyEditText;
+    private EditText portEditText;
+    private Button pokeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mRegistrationProgressBar = (ProgressBar) findViewById(R.id.registrationProgressBar);
+        mRegistrationProgressBar = (ProgressBar) findViewById(R.id.create_poke_bar);
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                mRegistrationProgressBar.setVisibility(ProgressBar.GONE);
+                mRegistrationProgressBar.setVisibility(ProgressBar.VISIBLE);
                 boolean sentToken = PrefHelper.getTokenSent(context);
                 if (sentToken) {
-                    mInformationTextView.setText(getString(R.string.gcm_send_message));
+                    Toast.makeText(context, getString(R.string.gcm_send_message),
+                            Toast.LENGTH_LONG).show();
                 } else {
-                    mInformationTextView.setText(getString(R.string.token_error_message));
+                    Toast.makeText(context, getString(R.string.token_error_message),
+                            Toast.LENGTH_LONG).show();
                 }
             }
         };
-        mInformationTextView = (TextView) findViewById(R.id.informationTextView);
 
         if (checkPlayServices()) {
             // Start IntentService to register this application with GCM.
@@ -58,14 +64,35 @@ public class MainActivity extends Activity {
             startService(intent);
         }
 
-//        setupView();
+        setupView();
     }
 
-//    private void setupView() {
-//        pokeAddressEditText = (EditText) findViewById(R.id.address);
-//        pokeButton = (Button) findViewById(R.id.poke_btn);
-//        addToListButton = (Button) findViewById(R.id.add_poke_btn);
-//    }
+    private void setupView() {
+        pokeAddressEditText = (EditText) findViewById(R.id.server);
+        frequencyEditText = (EditText) findViewById(R.id.frequency);
+        portEditText = (EditText) findViewById(R.id.port);
+        pokeButton = (Button) findViewById(R.id.submit_poke_btn);
+
+        pokeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pokeButtonClicked();
+            }
+        });
+    }
+
+    private void pokeButtonClicked() {
+        String address = pokeAddressEditText.getText().toString();
+        int frequency = Integer.parseInt(frequencyEditText.getText().toString());
+        String port = portEditText.getText().toString();
+
+        //TODO Make work for HTTPS/port 443
+        if (port.equals("")) {
+            port = "80";
+        }
+
+        RequestUtil.sendServerInfo(address, port, frequency, getApplicationContext());
+    }
 
     @Override
     protected void onResume() {

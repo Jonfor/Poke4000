@@ -37,17 +37,16 @@ public class PrefHelper {
 
     /**
      * Gets the current registration token for application on GCM service.
-     * <p/>
      * If result is empty, the app needs to register.
      *
      * @return registration token, or empty string if there is no existing
      * registration token.
      */
-    public static String getRegistrationId(Context context) {
+    public static String getRegistrationToken(Context context) {
         final SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
         String registrationId = prefs.getString(PROPERTY_TOKEN, "");
         if (registrationId.isEmpty()) {
-            Log.i("Not found", "Registration not found.");
+            Log.i("Not found", "Registration token not found.");
             return "";
         }
         return registrationId;
